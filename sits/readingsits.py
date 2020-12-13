@@ -31,19 +31,25 @@ def readSITSData(name_file):
 			- polygon_ids: id polygon (use e.g. for validation set)
 			- Y: label for each example
 	"""
-	
-	data = pd.read_table(name_file, sep=',', header=None)
-	
-	y_data = data.iloc[:,0]
+	data = pd.read_table(name_file, sep=',', header=0)
+	#data = pd.read_table(name_file, sep=',', header=None)
+	print(data.shape)
+	print(data.head())
+	y_data = data.iloc[:,1]
+	#y_data = data.iloc[:,0]
 	y = np.asarray(y_data.values, dtype='uint8')
-	
-	polygonID_data = data.iloc[:,1]
+	print(y.shape)
+	polygonID_data = data.iloc[:,0]
+	#polygonID_data = data.iloc[:,1]
 	polygon_ids = polygonID_data.values
 	polygon_ids = np.asarray(polygon_ids, dtype='uint16')
+	print(polygon_ids.shape)
 		
 	X_data = data.iloc[:,2:]
 	X = X_data.values
-	X = np.asarray(X, dtype='float32')
+	#X = np.asarray(X, dtype='float32')
+	X = np.asarray(X, dtype='float64')
+	print(X.shape)
 
 	return  X, polygon_ids, y
 
@@ -61,7 +67,7 @@ def addFeatures(X):
 				in the following order	
 					[X, date1.NDVI, ..., dateD.NDVI, date1.NDWI, ..., dateD.NDWI, date1.Brilliance, ..., dateD.Brilliance]
 	"""
-	n_channels = 3
+	n_channels = 16
 	
 	NIR = X[:,0::n_channels]
 	NIR = np.array(NIR)

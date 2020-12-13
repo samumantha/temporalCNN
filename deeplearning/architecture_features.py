@@ -134,6 +134,7 @@ def getNoClasses(model_path):
 	model = load_model(model_path)
 	last_weight = model.get_weights()[-1]
 	nclasses = last_weight.shape[0] #--- get size of the bias in the Softmax
+	print(nclasses)
 	return nclasses
 
 #-----------------------------------------------------------------------

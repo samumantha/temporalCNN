@@ -14,6 +14,7 @@ from keras.models import Model, load_model
 from sits.readingsits import *
 from outputfiles.save import *
 from deeplearning.architecture_features import *
+import joblib
 
 #-----------------------------------------------------------------------		
 def main(model_path, test_file, result_file, proba, feature):
@@ -23,8 +24,9 @@ def main(model_path, test_file, result_file, proba, feature):
 	file_type = result_file.split('.')[-1]
 	
 	#-- Parameters to set
-	n_channels = 3 #-- NIR, R, G
-	
+	#n_channels = 16 #-- NIR, R, G
+	n_channels = 16
+
 	#-- Get the number of classes
 	n_classes = getNoClasses(model_path)
 	
@@ -68,7 +70,11 @@ def main(model_path, test_file, result_file, proba, feature):
 			
 		
 	#---- Loading the model
-	model = load_model(model_path)
+	if 'RF' in model_path:
+		model = joblib.load(model_path)
+	else:
+		model = load_model(model_path)
+	
 	
 	if file_type=="csv":
 		p_test = model.predict(x=X_test)
