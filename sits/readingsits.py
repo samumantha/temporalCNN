@@ -21,6 +21,15 @@ final_class_label = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9',
 
 
 #-----------------------------------------------------------------------
+def readSITSData_npy(name_file):
+
+	data = np.load(name_file)
+	y = data[:,0]
+	polygon_ids = data[:,1]
+	X = data[:,2:]
+
+	return  X, polygon_ids, y
+
 def readSITSData(name_file):
 	"""
 		Read the data contained in name_file

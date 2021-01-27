@@ -20,8 +20,9 @@ import joblib
 def main(model_path, test_file, result_file, proba, feature):
 	
 	#-- Checking the extension
-	assert result_file.split('.')[-1]==test_file.split('.')[-1], "ERR: requires similar extension"
-	file_type = result_file.split('.')[-1]
+	#assert result_file.split('.')[-1]==test_file.split('.')[-1], "ERR: requires similar extension"
+	#file_type = result_file.split('.')[-1]
+	file_type= test_file.split('.')[-1]
 	
 	#-- Parameters to set
 	#n_channels = 16 #-- NIR, R, G
@@ -39,6 +40,11 @@ def main(model_path, test_file, result_file, proba, feature):
 		assert False, "ERR: min-max values needs to be stored during training"
 	
 	#-- Downloading
+	if file_type == 'npy':
+		X_test, polygon_ids_test, y_test = readSITSData_npy(test_file)		
+		X_test = addingfeat_reshape_data(X_test, feature, n_channels)		
+		X_test =  normalizingData(X_test, min_per, max_per)
+
 	if file_type=="csv":
 		X_test, polygon_ids_test, y_test = readSITSData(test_file)		
 		X_test = addingfeat_reshape_data(X_test, feature, n_channels)		
@@ -76,7 +82,7 @@ def main(model_path, test_file, result_file, proba, feature):
 		model = load_model(model_path)
 	
 	
-	if file_type=="csv":
+	if file_type=="csv" or file_type=="npy":
 		p_test = model.predict(x=X_test)
 		if not proba:
 			p_test = p_test.argmax(axis=1)
